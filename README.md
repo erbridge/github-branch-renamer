@@ -1,17 +1,15 @@
 # GitHub Branch Renamer
 
-A tool to rename the `master` branch in many repositories at once.
+A tool to rename the `master` branch for an entire account at once.
 
 ## Installation
 
-Clone this repository locally.
-
 ### macOS
 
-Install the dependencies with Homebrew.
+Install with Homebrew.
 
 ```sh
-brew bundle install
+brew install erbridge/tap/github-branch-renamer
 ```
 
 ### Everything else
@@ -23,7 +21,7 @@ about required dependencies.
 
 ```
 $ gbr
-Rename the master branch in many repositories at once.
+Rename the 'master' branch for an entire account at once.
 
 This tool will find all repositories on GitHub belonging to an account that:
 
