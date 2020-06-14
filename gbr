@@ -1,0 +1,196 @@
+#!/bin/bash
+set -e
+
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+usage() {
+  echo "Rename the master branch in many repositories at once."
+  echo ""
+  echo "This tool will find all repositories on GitHub belonging to an account that:"
+  echo ""
+  echo "  - aren't forks"
+  echo "  - aren't archived or disabled"
+  echo "  - have their default branch set to 'master'"
+  echo ""
+  echo "It will then rename the master branch to 'main' by default, and set that as the"
+  echo "default branch on GitHub instead of 'master'."
+  echo ""
+  echo "By default, the 'master' branch will be left untouched to prevent any accidental"
+  echo "data loss. If you'd like to delete those branches, set the '--delete' flag."
+  echo ""
+  echo "You must specify one of '--org' or '--user' (but not both) to select the account"
+  echo "to collect repositories in."
+  echo ""
+  echo "${BOLD}USAGE${NORMAL}"
+  echo "  $(basename "$0") [flags]"
+  echo ""
+  echo "${BOLD}FLAGS${NORMAL}"
+  echo "  -o, --org string          The organization to collect repositories in"
+  echo "  -u, --user string         The username to collect repositories in"
+  echo "  -b, --new-branch string   The new name for the master branch (defaults to"
+  echo "                              'main')"
+  echo "  -d, --delete              Delete the master branch from GitHub"
+  exit 1
+}
+
+if [ $# -lt 2 ]; then
+  usage
+fi
+
+ORG=
+USER=
+NEW_BRANCH=main
+DELETE=0
+
+while [ $# -gt 0 ] ; do
+  case $1 in
+    -o | --org)
+      ORG="$2"
+      ;;
+    -u | --user)
+      USER="$2"
+      ;;
+    -b | --new-branch)
+      NEW_BRANCH="$2"
+      ;;
+    -d | --delete)
+      DELETE=1
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$USER" ] && [ -z "$ORG" ]; then
+  usage
+fi
+
+if [ -n "$USER" ] && [ -n "$ORG" ]; then
+  usage
+fi
+
+REPOS_ENDPOINT=
+ACCOUNT=
+
+if [ -n "$USER" ]; then
+  REPOS_ENDPOINT="users/$USER/repos"
+  ACCOUNT=$USER
+else
+  REPOS_ENDPOINT="orgs/$ORG/repos"
+  ACCOUNT=$ORG
+fi
+
+echo "${BOLD}==> Collecting relevant repositories for '$ACCOUNT'...${NORMAL}"
+
+PARAMS="?per_page=100"
+REPOS=
+
+while [ -n "$PARAMS" ]; do
+  RESPONSE=$(gh api "$REPOS_ENDPOINT$PARAMS" --include)
+
+  BODY=$(echo "$RESPONSE" | tail -1)
+
+  REPOS+=$(
+    echo "$BODY" |
+    jq "
+      map(
+        select(
+          .fork == false and
+          .archived == false and
+          .disabled == false and
+          .default_branch == \"master\"
+        ) |
+        {
+          id: .id,
+          name: .name
+        }
+      )[]
+    "
+  )
+
+  # shellcheck disable=SC1004
+  PARAMS=$(
+    echo "$RESPONSE" |
+    grep -F Link: |
+    sed 's/Link: //' |
+    sed 's/, /\
+/g' |
+    grep -F 'rel="next"' |
+    grep -o '\?.*>' |
+    sed -e 's/>$//'
+  )
+done
+
+if [ -z "$REPOS" ]; then
+  echo "No relevant repositories found."
+  exit
+fi
+
+TMP_DIR=/tmp/gbr/$ACCOUNT
+
+echo "${BOLD}==> (Re)creating '$TMP_DIR'...${NORMAL}"
+
+rm -rf "$TMP_DIR"
+mkdir -p "$TMP_DIR"
+cd "$TMP_DIR"
+
+FAILED_DELETIONS=()
+
+for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
+  echo "${BOLD}==> Updating '$ACCOUNT/$REPO'...${NORMAL}"
+
+  git clone "git@github.com:$ACCOUNT/$REPO.git" "$TMP_DIR/$REPO"
+
+  cd "$TMP_DIR/$REPO"
+
+  echo "${BOLD}Setting '$NEW_BRANCH' to point to the head of 'master'...${NORMAL}"
+
+  git checkout -B "$NEW_BRANCH" origin/master --no-track
+  git push --set-upstream origin "$NEW_BRANCH"
+  git remote set-head origin "$NEW_BRANCH"
+
+  echo "${BOLD}Changing default branch to '$NEW_BRANCH'...${NORMAL}"
+
+  gh api repos/:owner/:repo \
+    --method PATCH \
+    --raw-field default_branch="$NEW_BRANCH" \
+    >/dev/null
+
+  echo "${BOLD}Changing open pull request target branches to '$NEW_BRANCH'...${NORMAL}"
+
+  for PR in $(gh pr list --base master --limit 9999 | cut -f 1); do
+    gh api "repos/:owner/:repo/pulls/$PR" \
+      --method PATCH \
+      --raw-field base="$NEW_BRANCH" \
+      >/dev/null
+    echo -n "."
+  done
+
+  echo ""
+
+  if [ -n "$DELETE" ]; then
+    git push origin --delete master || FAILED_DELETIONS+=("$REPO")
+  fi
+done
+
+echo "Done!"
+
+if [ ${#FAILED_DELETIONS[@]} -gt 0 ]; then
+  echo ""
+  echo "${BOLD}NOTE${NORMAL}"
+  echo ""
+  echo "Failed to delete the 'master' branch from the following repositories:"
+  echo ""
+
+  for REPO in "${FAILED_DELETIONS[@]}"; do
+    echo "  $ACCOUNT/$REPO"
+  done
+
+  echo ""
+  echo "Manual intervention is required."
+fi
+
+echo ""
+echo "${BOLD}NOTE${NORMAL}"
+echo ""
+echo "Any CI or other code that relies on branch names will need to be updated manually."
