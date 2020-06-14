@@ -154,58 +154,76 @@ rm -rf "$TMP_DIR"
 mkdir -p "$TMP_DIR"
 cd "$TMP_DIR"
 
+FAILED_RENAMES=()
 FAILED_DELETIONS=()
 
 for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
-  echo "${BOLD}==> Updating '$ACCOUNT/$REPO'...${NORMAL}"
+  {
+    echo "${BOLD}==> Updating '$ACCOUNT/$REPO'...${NORMAL}"
 
-  git clone "git@github.com:$ACCOUNT/$REPO.git" "$TMP_DIR/$REPO"
+    git clone "git@github.com:$ACCOUNT/$REPO.git" "$TMP_DIR/$REPO"
 
-  cd "$TMP_DIR/$REPO"
+    cd "$TMP_DIR/$REPO"
 
-  echo "${BOLD}Setting '$NEW_BRANCH' to point to the head of 'master'...${NORMAL}"
+    echo "${BOLD}Setting '$NEW_BRANCH' to point to the head of 'master'...${NORMAL}"
 
-  git checkout -B "$NEW_BRANCH" origin/master --no-track
+    git checkout -B "$NEW_BRANCH" origin/master --no-track
 
-  if [ -z "$DRY_RUN" ]; then
-    git push --set-upstream origin "$NEW_BRANCH"
-    git remote set-head origin "$NEW_BRANCH"
-  fi
-
-  echo "${BOLD}Changing default branch to '$NEW_BRANCH'...${NORMAL}"
-
-  if [ -z "$DRY_RUN" ]; then
-    gh api repos/:owner/:repo \
-      --method PATCH \
-      --raw-field default_branch="$NEW_BRANCH" \
-      >/dev/null
-  fi
-
-  echo "${BOLD}Changing open pull request target branches to '$NEW_BRANCH'...${NORMAL}"
-
-  for PR in $(gh pr list --base master --limit 9999 | cut -f 1); do
     if [ -z "$DRY_RUN" ]; then
-      gh api "repos/:owner/:repo/pulls/$PR" \
+      git push --set-upstream origin "$NEW_BRANCH"
+      git remote set-head origin "$NEW_BRANCH"
+    fi
+
+    echo "${BOLD}Changing default branch to '$NEW_BRANCH'...${NORMAL}"
+
+    if [ -z "$DRY_RUN" ]; then
+      gh api repos/:owner/:repo \
         --method PATCH \
-        --raw-field base="$NEW_BRANCH" \
+        --raw-field default_branch="$NEW_BRANCH" \
         >/dev/null
     fi
 
-    echo -n "."
-  done
+    echo "${BOLD}Changing open pull request target branches to '$NEW_BRANCH'...${NORMAL}"
 
-  echo ""
+    for PR in $(gh pr list --base master --limit 9999 | cut -f 1); do
+      if [ -z "$DRY_RUN" ]; then
+        gh api "repos/:owner/:repo/pulls/$PR" \
+          --method PATCH \
+          --raw-field base="$NEW_BRANCH" \
+          >/dev/null
+      fi
 
-  if [ -n "$DELETE" ]; then
-    echo "${BOLD}Deleting 'master'...${NORMAL}"
+      echo -n "."
+    done
 
-    if [ -z "$DRY_RUN" ]; then
-      git push origin --delete master || FAILED_DELETIONS+=("$REPO")
+    echo ""
+
+    if [ -n "$DELETE" ]; then
+      echo "${BOLD}Deleting 'master'...${NORMAL}"
+
+      if [ -z "$DRY_RUN" ]; then
+        git push origin --delete master || FAILED_DELETIONS+=("$REPO")
+      fi
     fi
-  fi
+  } || FAILED_RENAMES+=("$REPO")
 done
 
 echo "Done!"
+
+if [ ${#FAILED_RENAMES[@]} -gt 0 ]; then
+  echo ""
+  echo "${BOLD}NOTE${NORMAL}"
+  echo ""
+  echo "Failed to rename the 'master' branch for the following repositories:"
+  echo ""
+
+  for REPO in "${FAILED_RENAMES[@]}"; do
+    echo "  $ACCOUNT/$REPO"
+  done
+
+  echo ""
+  echo "Manual intervention is required."
+fi
 
 if [ ${#FAILED_DELETIONS[@]} -gt 0 ]; then
   echo ""
