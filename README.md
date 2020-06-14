@@ -37,8 +37,9 @@ default branch on GitHub instead of 'master'.
 By default, the 'master' branch will be left untouched to prevent any accidental
 data loss. If you'd like to delete those branches, set the '--delete' flag.
 
-You must specify one of '--org' or '--user' (but not both) to select the account
-to collect repositories in.
+You must choose to either do a dry run ('--dry-run') or force the changes
+('--force'). You must also specify one of '--org' or '--user' (but not both) to
+select the account to collect repositories from.
 
 USAGE
   gbr [flags]
@@ -49,6 +50,9 @@ FLAGS
   -b, --new-branch string   The new name for the master branch (defaults to
                               'main')
   -d, --delete              Delete the master branch from GitHub
+  -n, --dry-run             Report what will happen, without making any changes
+                               on GitHub
+  -f, --force               Run for real, making changes on GitHub
 ```
 
 ## Why?
