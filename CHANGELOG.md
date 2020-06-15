@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.0] - 2020-06-15
+
 ### Added
 
 - Support for running for GitHub teams only (thanks
@@ -25,5 +27,7 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.1.0...HEAD
-[0.0.1]: https://github.com/erbridge/github-branch-renamer/releases/tag/v0.1.0
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.0...HEAD
+[0.2.0]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/erbridge/github-branch-renamer/releases/tag/v0.1.0
