@@ -10,13 +10,15 @@ and this project adheres to
 
 ### Added
 
-- Support for running for GitHub teams only (thanks @lfdebrux -
+- Support for running for GitHub teams only (thanks
+  [@lfdebrux](https://github.com/lfdebrux) -
   [#3](https://github.com/erbridge/github-branch-renamer/pull/3))
 
 ### Fixed
 
 - Fix binary flag options `--delete`, `--force`, and `--dry-run` (thanks
-  @lfdebrux - [#1](https://github.com/erbridge/github-branch-renamer/pull/1))
+  [@lfdebrux](https://github.com/lfdebrux) -
+  [#1](https://github.com/erbridge/github-branch-renamer/pull/1))
 
 ## [0.1.0] - 2020-06-14
 
