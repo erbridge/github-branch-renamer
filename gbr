@@ -77,7 +77,7 @@ if [ -z "$FORCE" ] && [ -z "$DRY_RUN" ]; then
   usage
 fi
 
-if [ -n "$FORCE" ] && [ -n "$DRY_RUN" ]; then
+if [ "$FORCE" -eq 1 ] && [ "$DRY_RUN" -eq 1 ]; then
   usage
 fi
 
