@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix binary flag options `--delete`, `--force`, and `--dry-run`
+  ([#1](https://github.com/erbridge/github-branch-renamer/pull/1))
+
 ## [0.1.0] - 2020-06-14
 
 Initial release.
