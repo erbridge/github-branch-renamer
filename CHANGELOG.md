@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Support for running for GitHub teams only (thanks @lfdebrux -
+  [#3](https://github.com/erbridge/github-branch-renamer/pull/3))
+
 ### Fixed
 
 - Fix binary flag options `--delete`, `--force`, and `--dry-run` (thanks
