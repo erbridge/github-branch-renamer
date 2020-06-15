@@ -27,8 +27,9 @@ usage() {
   echo "  $(basename "$0") [flags]"
   echo ""
   echo "${BOLD}FLAGS${NORMAL}"
-  echo "  -o, --org string          The organization to collect repositories in"
   echo "  -u, --user string         The username to collect repositories in"
+  echo "  -o, --org string          The organization to collect repositories in"
+  echo "  -t, --team string         The team within the organization (optional)"
   echo "  -b, --new-branch string   The new name for the master branch (defaults to"
   echo "                              'main')"
   echo "  -d, --delete              Delete the master branch from GitHub"
@@ -43,6 +44,7 @@ if [ $# -lt 2 ]; then
 fi
 
 ORG=
+TEAM=
 USER=
 NEW_BRANCH=main
 DELETE=0
@@ -51,11 +53,14 @@ FORCE=0
 
 while [ $# -gt 0 ] ; do
   case $1 in
+    -u | --user)
+      USER="$2"
+      ;;
     -o | --org)
       ORG="$2"
       ;;
-    -u | --user)
-      USER="$2"
+    -t | --team)
+      TEAM="$2"
       ;;
     -b | --new-branch)
       NEW_BRANCH="$2"
@@ -89,18 +94,33 @@ if [ -n "$USER" ] && [ -n "$ORG" ]; then
   usage
 fi
 
+if [ -z "$ORG" ] && [ -n "$TEAM" ]; then
+  usage
+fi
+
+if [ -n "$USER" ] && [ -n "$TEAM" ]; then
+  usage
+fi
+
 REPOS_ENDPOINT=
 ACCOUNT=
 
 if [ -n "$USER" ]; then
   REPOS_ENDPOINT="users/$USER/repos"
   ACCOUNT=$USER
+elif [ -n "$ORG" ] && [ -n "$TEAM" ]; then
+  REPOS_ENDPOINT="orgs/$ORG/teams/$TEAM/repos"
+  ACCOUNT=$ORG
 else
   REPOS_ENDPOINT="orgs/$ORG/repos"
   ACCOUNT=$ORG
 fi
 
-echo "${BOLD}==> Collecting relevant repositories for '$ACCOUNT'...${NORMAL}"
+if [ -n "$TEAM" ]; then
+  echo "${BOLD}==> Collecting relevant repositories for '$ORG/$TEAM'...${NORMAL}"
+else
+  echo "${BOLD}==> Collecting relevant repositories for '$ACCOUNT'...${NORMAL}"
+fi
 
 PARAMS="?per_page=100"
 REPOS=
