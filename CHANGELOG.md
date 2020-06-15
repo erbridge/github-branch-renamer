@@ -10,8 +10,8 @@ and this project adheres to
 
 ### Fixed
 
-- Fix binary flag options `--delete`, `--force`, and `--dry-run`
-  ([#1](https://github.com/erbridge/github-branch-renamer/pull/1))
+- Fix binary flag options `--delete`, `--force`, and `--dry-run` (thanks
+  @lfdebrux - [#1](https://github.com/erbridge/github-branch-renamer/pull/1))
 
 ## [0.1.0] - 2020-06-14
 
