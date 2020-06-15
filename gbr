@@ -27,11 +27,9 @@ usage() {
   echo "  $(basename "$0") [flags]"
   echo ""
   echo "${BOLD}FLAGS${NORMAL}"
+  echo "  -u, --user string         The username to collect repositories in"
   echo "  -o, --org string          The organization to collect repositories in"
   echo "  -t, --team string         The team within the organization (optional)"
-  echo ""
-  echo "  -u, --user string         The username to collect repositories in"
-  echo ""
   echo "  -b, --new-branch string   The new name for the master branch (defaults to"
   echo "                              'main')"
   echo "  -d, --delete              Delete the master branch from GitHub"
@@ -55,14 +53,14 @@ FORCE=0
 
 while [ $# -gt 0 ] ; do
   case $1 in
+    -u | --user)
+      USER="$2"
+      ;;
     -o | --org)
       ORG="$2"
       ;;
     -t | --team)
       TEAM="$2"
-      ;;
-    -u | --user)
-      USER="$2"
       ;;
     -b | --new-branch)
       NEW_BRANCH="$2"

@@ -43,8 +43,9 @@ USAGE
   gbr [flags]
 
 FLAGS
-  -o, --org string          The organization to collect repositories in
   -u, --user string         The username to collect repositories in
+  -o, --org string          The organization to collect repositories in
+  -t, --team string         The team within the organization (optional)
   -b, --new-branch string   The new name for the master branch (defaults to
                               'main')
   -d, --delete              Delete the master branch from GitHub
