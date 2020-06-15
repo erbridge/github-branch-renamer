@@ -198,7 +198,7 @@ for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
 
     echo ""
 
-    if [ -n "$DELETE" ]; then
+    if [ "$DELETE" -eq 1 ]; then
       echo "${BOLD}Deleting 'master'...${NORMAL}"
 
       if [ -z "$DRY_RUN" ]; then
