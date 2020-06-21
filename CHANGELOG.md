@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.1] - 2020-06-21
+
+### Fixed
+
+- Added `pipefail` option to catch errors in pipes (thanks
+  [@rjw](https://github.com/rjw) -
+  [#4](https://github.com/erbridge/github-branch-renamer/pull/4))
+
 ## [0.2.0] - 2020-06-15
 
 ### Added
@@ -27,7 +35,9 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.2.0...HEAD
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.1...HEAD
+[0.2.1]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.0...v0.2.1
 [0.2.0]:
   https://github.com/erbridge/github-branch-renamer/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/erbridge/github-branch-renamer/releases/tag/v0.1.0
