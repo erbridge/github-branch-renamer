@@ -13,7 +13,7 @@ and this project adheres to
 ### Fixed
 
 - Added `pipefail` option to catch errors in pipes (thanks
-  [@rjw](https://github.com/rjw) -
+  [@rjw1](https://github.com/rjw1) -
   [#4](https://github.com/erbridge/github-branch-renamer/pull/4))
 
 ## [0.2.0] - 2020-06-15
