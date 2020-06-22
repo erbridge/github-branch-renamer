@@ -8,13 +8,21 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.3] - 2020-06-22
+
+### Fixed
+
+- Allow intentional pipefail when parsing query parameters (thanks
+  [@lfdebrux](https://github.com/lfdebrux) -
+  [#5](https://github.com/erbridge/github-branch-renamer/pull/5))
+
 ## [0.2.2] - 2020-06-22
 
 ### Fixed
 
 - Fix binary flag options `--force` and `--dry-run`, again (thanks
   [@lfdebrux](https://github.com/lfdebrux) -
-  [#5](https://github.com/erbridge/github-branch-renamer/pull/5))
+  [#6](https://github.com/erbridge/github-branch-renamer/pull/6))
 
 ## [0.2.1] - 2020-06-21
 
@@ -43,7 +51,9 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.2.2...HEAD
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.3...HEAD
+[0.2.3]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.2...v0.2.3
 [0.2.2]:
   https://github.com/erbridge/github-branch-renamer/compare/v0.2.1...v0.2.2
 [0.2.1]:
