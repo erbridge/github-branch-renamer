@@ -148,6 +148,8 @@ while [ -n "$PARAMS" ]; do
     "
   )
 
+  set +o pipefail
+
   # shellcheck disable=SC1004
   PARAMS=$(
     echo "$RESPONSE" |
@@ -159,6 +161,8 @@ while [ -n "$PARAMS" ]; do
     grep -o '\?.*>' |
     sed -e 's/>$//'
   )
+
+  set -o pipefail
 done
 
 if [ -z "$REPOS" ]; then
