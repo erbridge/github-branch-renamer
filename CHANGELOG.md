@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.2] - 2020-06-22
+
+### Fixed
+
+- Fix binary flag options `--force` and `--dry-run`, again (thanks
+  [@lfdebrux](https://github.com/lfdebrux) -
+  [#5](https://github.com/erbridge/github-branch-renamer/pull/5))
+
 ## [0.2.1] - 2020-06-21
 
 ### Fixed
@@ -35,7 +43,9 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.2.1...HEAD
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.2...HEAD
+[0.2.2]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.1...v0.2.2
 [0.2.1]:
   https://github.com/erbridge/github-branch-renamer/compare/v0.2.0...v0.2.1
 [0.2.0]:
