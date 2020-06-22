@@ -78,7 +78,7 @@ while [ $# -gt 0 ] ; do
   shift
 done
 
-if [ -z "$FORCE" ] && [ -z "$DRY_RUN" ]; then
+if [ "$FORCE" -ne 1 ] && [ "$DRY_RUN" -ne 1 ]; then
   usage
 fi
 
@@ -189,14 +189,14 @@ for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
 
     git checkout -B "$NEW_BRANCH" origin/master --no-track
 
-    if [ -z "$DRY_RUN" ]; then
+    if [ "$DRY_RUN" -ne 1 ]; then
       git push --set-upstream origin "$NEW_BRANCH"
       git remote set-head origin "$NEW_BRANCH"
     fi
 
     echo "${BOLD}Changing default branch to '$NEW_BRANCH'...${NORMAL}"
 
-    if [ -z "$DRY_RUN" ]; then
+    if [ "$DRY_RUN" -ne 1 ]; then
       gh api repos/:owner/:repo \
         --method PATCH \
         --raw-field default_branch="$NEW_BRANCH" \
@@ -206,7 +206,7 @@ for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
     echo "${BOLD}Changing open pull request target branches to '$NEW_BRANCH'...${NORMAL}"
 
     for PR in $(gh pr list --base master --limit 9999 | cut -f 1); do
-      if [ -z "$DRY_RUN" ]; then
+      if [ "$DRY_RUN" -ne 1 ]; then
         gh api "repos/:owner/:repo/pulls/$PR" \
           --method PATCH \
           --raw-field base="$NEW_BRANCH" \
@@ -221,7 +221,7 @@ for REPO in $(echo "$REPOS" | jq '.name' | sed 's/"//g'); do
     if [ "$DELETE" -eq 1 ]; then
       echo "${BOLD}Deleting 'master'...${NORMAL}"
 
-      if [ -z "$DRY_RUN" ]; then
+      if [ "$DRY_RUN" -ne 1 ]; then
         git push origin --delete master || FAILED_DELETIONS+=("$REPO")
       fi
     fi
