@@ -36,6 +36,8 @@ usage() {
   echo "  -n, --dry-run             Report what will happen, without making any changes"
   echo "                               on GitHub"
   echo "  -f, --force               Run for real, making changes on GitHub"
+  echo "  -l, --list                Print a list of all GitHub repositories that would"
+  echo "                               be changed and exits (implies a dry runs)"
   exit 1
 }
 
@@ -50,6 +52,7 @@ NEW_BRANCH=main
 DELETE=0
 DRY_RUN=0
 FORCE=0
+LIST_ONLY=0
 
 while [ $# -gt 0 ] ; do
   case $1 in
@@ -74,6 +77,10 @@ while [ $# -gt 0 ] ; do
     -f | --force)
       FORCE=1
       ;;
+    -l | --list)
+      LIST_ONLY=1
+      DRY_RUN=1
+      ;;
   esac
   shift
 done
@@ -83,6 +90,10 @@ if [ "$FORCE" -ne 1 ] && [ "$DRY_RUN" -ne 1 ]; then
 fi
 
 if [ "$FORCE" -eq 1 ] && [ "$DRY_RUN" -eq 1 ]; then
+  usage
+fi
+
+if [ "$LIST_ONLY" -eq 1 ] && [ "$DRY_RUN" -ne 1 ]; then
   usage
 fi
 
@@ -167,6 +178,11 @@ done
 
 if [ -z "$REPOS" ]; then
   echo "No relevant repositories found."
+  exit
+fi
+
+if [ "$LIST_ONLY" -eq 1 ]; then
+  echo "$REPOS" | jq '.name' | sed 's/"//g' | sed 's;^;dxw/;g'
   exit
 fi
 

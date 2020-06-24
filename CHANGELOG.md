@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Support dumping out a list of repositories that would be affected
+
 ## [0.2.3] - 2020-06-22
 
 ### Fixed
