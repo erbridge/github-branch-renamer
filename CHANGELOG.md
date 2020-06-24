@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.2.4] - 2020-06-24
+
 ### Added
 
 - Support dumping out a list of repositories that would be affected
@@ -55,7 +57,9 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.2.3...HEAD
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.4...HEAD
+[0.2.4]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.3...v0.2.4
 [0.2.3]:
   https://github.com/erbridge/github-branch-renamer/compare/v0.2.2...v0.2.3
 [0.2.2]:
