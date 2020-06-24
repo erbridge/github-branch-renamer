@@ -53,7 +53,7 @@ FLAGS
                                on GitHub
   -f, --force               Run for real, making changes on GitHub
   -l, --list                Print a list of all GitHub repositories that would
-                               be changed and exits (implies a dry runs)
+                               be changed and exit (implies a dry runs)
 ```
 
 ## Why?

@@ -37,7 +37,7 @@ usage() {
   echo "                               on GitHub"
   echo "  -f, --force               Run for real, making changes on GitHub"
   echo "  -l, --list                Print a list of all GitHub repositories that would"
-  echo "                               be changed and exits (implies a dry runs)"
+  echo "                               be changed and exit (implies a dry runs)"
   exit 1
 }
 
