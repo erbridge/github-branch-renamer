@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.0] - 2020-11-28
+
+### Changed
+
+- **BREAKING** List the full names of the GitHub repositories when using
+  `--list` (thanks [@lfdebrux](https://github.com/lfdebrux) -
+  [#8](https://github.com/erbridge/github-branch-renamer/pull/8))
+
 ## [0.2.4] - 2020-06-24
 
 ### Added
@@ -57,7 +65,9 @@ and this project adheres to
 Initial release.
 
 [unreleased]:
-  https://github.com/erbridge/github-branch-renamer/compare/v0.2.4...HEAD
+  https://github.com/erbridge/github-branch-renamer/compare/v0.3.0...HEAD
+[0.3.0]:
+  https://github.com/erbridge/github-branch-renamer/compare/v0.2.4...v0.3.0
 [0.2.4]:
   https://github.com/erbridge/github-branch-renamer/compare/v0.2.3...v0.2.4
 [0.2.3]:
