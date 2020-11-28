@@ -153,7 +153,8 @@ while [ -n "$PARAMS" ]; do
         ) |
         {
           id: .id,
-          name: .name
+          name: .name,
+          full_name: .full_name
         }
       )[]
     "
@@ -182,7 +183,7 @@ if [ -z "$REPOS" ]; then
 fi
 
 if [ "$LIST_ONLY" -eq 1 ]; then
-  echo "$REPOS" | jq '.name' | sed 's/"//g' | sed 's;^;dxw/;g'
+  echo "$REPOS" | jq -r '.full_name'
   exit
 fi
 
